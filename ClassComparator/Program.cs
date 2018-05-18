@@ -65,7 +65,81 @@ namespace ClassComparator
 
             Console.WriteLine(CompareObjects(d1, d2));
             Console.WriteLine(CompareObjects(d1, _d1));
+
+            var diff1 = DifferenceOnObjects(d1, _d1);
+            var diff2 = DifferenceOnObjects(d1, d2);
+
+            foreach (var str in diff1)
+            {
+                Console.WriteLine(str);
+            }
+
+            foreach (var str in diff2)
+            {
+                Console.WriteLine(str);
+            }
+
             Console.ReadKey();
+        }
+
+        static IList<string> DifferenceOnObjects(object first, object second, IList<string> result = null)
+        {
+            var endline = false;
+            var typeFirst = first.GetType();
+            var typeSecond = second.GetType();
+            var listFirst = first as System.Collections.ICollection;
+            var listSecond = second as System.Collections.ICollection;
+
+            if (result == null)
+            {
+                result = new List<string>();
+                endline = true;
+                result.Add($"Beginning of comparing {first} and {second}");
+            }
+
+            if (Object.ReferenceEquals(first, second))
+                return result;
+
+            if (listFirst != null)
+            {
+                var aEnumerator = listFirst.GetEnumerator();
+                var bEnumerator = listSecond.GetEnumerator();
+
+                while (aEnumerator.MoveNext() && bEnumerator.MoveNext())
+                {
+                    var f = aEnumerator.MoveNext();
+                    var s = bEnumerator.MoveNext();
+
+                    DifferenceOnObjects(f, s, result);
+                }
+            }
+
+            if (typeFirst.IsPrimitive)
+            {
+                if (!first.Equals(second))
+                {
+                    result.Add($"Expected {first} but found {second}");
+                }
+            }
+            else
+            {
+                var properties = typeFirst.GetProperties().Where(x => x.GetMethod != null);
+                foreach (var property in properties)
+                {
+                    var f = property.GetValue(first);
+                    var s = property.GetValue(second);
+
+                    DifferenceOnObjects(f, s, result);
+                }
+
+            }
+
+            if (endline)
+            {
+                result.Add($"End of comparing {first} and {second}");
+            }
+
+            return result;
         }
 
         static bool CompareObjects(object first, object second)
