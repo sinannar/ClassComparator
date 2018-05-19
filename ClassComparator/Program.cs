@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ClassComparator
 {
@@ -8,15 +9,21 @@ namespace ClassComparator
     {
         static void Main(string[] args)
         {
+            var serviceProvider = new ServiceCollection()
+            .AddSingleton<ICustomComparator, CustomComparator>()
+            .BuildServiceProvider();
+
+            var comparator = serviceProvider.GetService<ICustomComparator>();
+
             var d1 = PrepareFirstExample();
             var _d1 = PrepareFirstExample();
             DiffferenceDtos d2 = PrepareSecondExample();
 
-            Console.WriteLine(CustomComparator.CompareObjects(d1, d2));
-            Console.WriteLine(CustomComparator.CompareObjects(d1, _d1));
+            Console.WriteLine(comparator.CompareObjects(d1, d2));
+            Console.WriteLine(comparator.CompareObjects(d1, _d1));
 
-            var diff1 = CustomComparator.ListDifferenceOnObjects(d1, _d1);
-            var diff2 = CustomComparator.ListDifferenceOnObjects(d1, d2);
+            var diff1 = comparator.ListDifferenceOnObjects(d1, _d1);
+            var diff2 = comparator.ListDifferenceOnObjects(d1, d2);
 
             foreach (var str in diff1)
             {
@@ -27,8 +34,6 @@ namespace ClassComparator
             {
                 Console.WriteLine(str);
             }
-
-            // Console.ReadKey();
         }
 
         private static DiffferenceDtos PrepareSecondExample()

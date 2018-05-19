@@ -5,9 +5,9 @@ using System.Linq;
 namespace ClassComparator
 {
 
-    public static class CustomComparator
+    public class CustomComparator : ICustomComparator
     {
-        public static IList<string> ListDifferenceOnObjects(object first, object second, IList<string> result = null, string firstName = "", string secondName = "")
+        public IList<string> ListDifferenceOnObjects(object first, object second, IList<string> result = null, string firstName = "", string secondName = "")
         {
             var endline = false;
             var typeFirst = first.GetType();
@@ -91,7 +91,7 @@ namespace ClassComparator
             return result;
         }
 
-        public static bool CompareObjects(object first, object second)
+        public bool CompareObjects(object first, object second)
         {
             var typeFirst = first.GetType();
             var typeSecond = second.GetType();
