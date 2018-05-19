@@ -48,7 +48,8 @@ namespace ClassComparator
             }
 
             // If primitive type
-            if (typeFirst.IsPrimitive && !first.Equals(second))
+            if ((typeFirst.IsPrimitive || typeFirst == typeof(string)) 
+                && !first.Equals(second))
             {
                 result.Add($"Expected {first} but found {second}");
             }
@@ -65,7 +66,7 @@ namespace ClassComparator
                 }
             }
             // If complex type
-            else
+            else if(typeFirst.IsClass && typeFirst != typeof(string))
             {
                 var properties = typeFirst.GetProperties().Where(x => x.GetMethod != null);
                 foreach (var property in properties)
