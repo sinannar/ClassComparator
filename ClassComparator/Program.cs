@@ -28,7 +28,7 @@ namespace ClassComparator
                 Console.WriteLine(str);
             }
 
-            Console.ReadKey();
+            // Console.ReadKey();
         }
 
         static IList<string> ListDifferenceOnObjects(object first, object second, IList<string> result = null)
@@ -39,6 +39,7 @@ namespace ClassComparator
             var listFirst = first as System.Collections.ICollection;
             var listSecond = second as System.Collections.ICollection;
 
+            // Adding start line
             if (result == null)
             {
                 result = new List<string>();
@@ -46,30 +47,24 @@ namespace ClassComparator
                 result.Add($"Beginning of comparing {first} and {second}");
             }
 
-            if (Object.ReferenceEquals(first, second))
-                return result;
-
-            if (listFirst != null)
+            // If primitive type
+            if (typeFirst.IsPrimitive && !first.Equals(second))
+            {
+                result.Add($"Expected {first} but found {second}");
+            }
+            // If list
+            else if (listFirst != null)
             {
                 var aEnumerator = listFirst.GetEnumerator();
                 var bEnumerator = listSecond.GetEnumerator();
-
                 while (aEnumerator.MoveNext() && bEnumerator.MoveNext())
                 {
                     var f = aEnumerator.Current;
                     var s = bEnumerator.Current;
-
                     ListDifferenceOnObjects(f, s, result);
                 }
             }
-
-            if (typeFirst.IsPrimitive)
-            {
-                if (!first.Equals(second))
-                {
-                    result.Add($"Expected {first} but found {second}");
-                }
-            }
+            // If complex type
             else
             {
                 var properties = typeFirst.GetProperties().Where(x => x.GetMethod != null);
@@ -77,12 +72,11 @@ namespace ClassComparator
                 {
                     var f = property.GetValue(first);
                     var s = property.GetValue(second);
-
                     ListDifferenceOnObjects(f, s, result);
                 }
-
             }
 
+            // Adding end line
             if (endline)
             {
                 result.Add($"End of comparing {first} and {second}");
