@@ -8,59 +8,9 @@ namespace ClassComparator
     {
         static void Main(string[] args)
         {
-            var d1 = new DiffferenceDtos()
-            {
-                current = new Dto()
-                {
-                    primitiveInt = 1,
-                    stringProperty = "123",
-                    arrayProperty = new int[] { 1, 2, 3 },
-                    listProperty = new List<int>() { 4, 7, 8 }
-                },
-                sent = new Dto()
-                {
-                    primitiveInt = 2,
-                    stringProperty = "123",
-                    arrayProperty = new int[] { 2, 3, 4 },
-                    listProperty = new List<int>() { 1, 2, 3 }
-                },
-            };
-
-            var _d1 = new DiffferenceDtos()
-            {
-                current = new Dto()
-                {
-                    primitiveInt = 1,
-                    stringProperty = "123",
-                    arrayProperty = new int[] { 1, 2, 3 },
-                    listProperty = new List<int>() { 4, 7, 8 }
-                },
-                sent = new Dto()
-                {
-                    primitiveInt = 2,
-                    stringProperty = "123",
-                    arrayProperty = new int[] { 2, 3, 4 },
-                    listProperty = new List<int>() { 1, 2, 3 }
-                },
-            };
-
-            var d2 = new DiffferenceDtos()
-            {
-                current = new Dto()
-                {
-                    primitiveInt = 2,
-                    stringProperty = "223",
-                    arrayProperty = new int[] { 2, 2, 3 },
-                    listProperty = new List<int>() { 3, 7, 8 }
-                },
-                sent = new Dto()
-                {
-                    primitiveInt = 4,
-                    stringProperty = "223",
-                    arrayProperty = new int[] { 2, 2, 4 },
-                    listProperty = new List<int>() { 1, 3, 3 }
-                },
-            };
+            var d1 = PrepareFirstExample();
+            var _d1 = PrepareFirstExample();
+            DiffferenceDtos d2 = PrepareSecondExample();
 
             Console.WriteLine(CompareObjects(d1, d2));
             Console.WriteLine(CompareObjects(d1, _d1));
@@ -79,6 +29,48 @@ namespace ClassComparator
             }
 
             Console.ReadKey();
+        }
+
+        private static DiffferenceDtos PrepareSecondExample()
+        {
+            return new DiffferenceDtos()
+            {
+                current = new Dto()
+                {
+                    primitiveInt = 2,
+                    stringProperty = "223",
+                    arrayProperty = new int[] { 2, 2, 3 },
+                    listProperty = new List<int>() { 3, 7, 8 }
+                },
+                sent = new Dto()
+                {
+                    primitiveInt = 4,
+                    stringProperty = "223",
+                    arrayProperty = new int[] { 2, 2, 4 },
+                    listProperty = new List<int>() { 1, 3, 3 }
+                },
+            };
+        }
+
+        private static DiffferenceDtos PrepareFirstExample()
+        {
+            return new DiffferenceDtos()
+            {
+                current = new Dto()
+                {
+                    primitiveInt = 1,
+                    stringProperty = "123",
+                    arrayProperty = new int[] { 1, 2, 3 },
+                    listProperty = new List<int>() { 4, 7, 8 }
+                },
+                sent = new Dto()
+                {
+                    primitiveInt = 2,
+                    stringProperty = "123",
+                    arrayProperty = new int[] { 2, 3, 4 },
+                    listProperty = new List<int>() { 1, 2, 3 }
+                },
+            };
         }
 
         static IList<string> DifferenceOnObjects(object first, object second, IList<string> result = null)
