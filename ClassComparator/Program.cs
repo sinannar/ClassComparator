@@ -48,10 +48,20 @@ namespace ClassComparator
             }
 
             // If primitive type
-            if ((typeFirst.IsPrimitive || typeFirst == typeof(string)) 
+            if ((typeFirst.IsPrimitive || typeFirst == typeof(string))
                 && !first.Equals(second))
             {
-                result.Add($"Expected {first} but found {second}");
+                if (typeFirst.IsEnum)
+                {
+                    //NEED TO FIX TO SHOW ENUM CHARACTERS OR WHATEVER
+                    var f = typeFirst.GetEnumValues().GetValue((int)first).ToString();
+                    var s = typeFirst.GetEnumValues().GetValue((int)second).ToString();
+                    result.Add($"Expected {f} but found {s}");
+                }
+                else
+                {
+                    result.Add($"Expected {first} but found {second}");
+                }
             }
             // If list
             else if (listFirst != null)
@@ -66,7 +76,7 @@ namespace ClassComparator
                 }
             }
             // If complex type
-            else if(typeFirst.IsClass && typeFirst != typeof(string))
+            else if (typeFirst.IsClass && typeFirst != typeof(string))
             {
                 var properties = typeFirst.GetProperties().Where(x => x.GetMethod != null);
                 foreach (var property in properties)
@@ -139,6 +149,7 @@ namespace ClassComparator
             {
                 current = new Dto()
                 {
+                    E = Enm.A,
                     primitiveInt = 2,
                     stringProperty = "223",
                     arrayProperty = new int[] { 2, 2, 3 },
@@ -146,6 +157,7 @@ namespace ClassComparator
                 },
                 sent = new Dto()
                 {
+                    E = Enm.B,
                     primitiveInt = 4,
                     stringProperty = "223",
                     arrayProperty = new int[] { 2, 2, 4 },
@@ -160,6 +172,7 @@ namespace ClassComparator
             {
                 current = new Dto()
                 {
+                    E = Enm.C,
                     primitiveInt = 1,
                     stringProperty = "123",
                     arrayProperty = new int[] { 1, 2, 3 },
@@ -167,6 +180,7 @@ namespace ClassComparator
                 },
                 sent = new Dto()
                 {
+                    E = Enm.B,
                     primitiveInt = 2,
                     stringProperty = "123",
                     arrayProperty = new int[] { 2, 3, 4 },
@@ -177,8 +191,16 @@ namespace ClassComparator
 
     }
 
+    enum Enm
+    {
+        A,
+        B,
+        C
+    }
+
     class Dto
     {
+        public Enm E { get; set; }
         public int primitiveInt { get; set; }
         public string stringProperty { get; set; }
         public List<int> listProperty { get; set; }
