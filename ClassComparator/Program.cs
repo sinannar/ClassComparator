@@ -31,8 +31,6 @@ namespace ClassComparator
             // Console.ReadKey();
         }
 
-        
-
         private static DiffferenceDtos PrepareSecondExample()
         {
             return new DiffferenceDtos()
