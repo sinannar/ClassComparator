@@ -15,8 +15,8 @@ namespace ClassComparator
             Console.WriteLine(CompareObjects(d1, d2));
             Console.WriteLine(CompareObjects(d1, _d1));
 
-            var diff1 = DifferenceOnObjects(d1, _d1);
-            var diff2 = DifferenceOnObjects(d1, d2);
+            var diff1 = ListDifferenceOnObjects(d1, _d1);
+            var diff2 = ListDifferenceOnObjects(d1, d2);
 
             foreach (var str in diff1)
             {
@@ -73,7 +73,7 @@ namespace ClassComparator
             };
         }
 
-        static IList<string> DifferenceOnObjects(object first, object second, IList<string> result = null)
+        static IList<string> ListDifferenceOnObjects(object first, object second, IList<string> result = null)
         {
             var endline = false;
             var typeFirst = first.GetType();
@@ -101,7 +101,7 @@ namespace ClassComparator
                     var f = aEnumerator.MoveNext();
                     var s = bEnumerator.MoveNext();
 
-                    DifferenceOnObjects(f, s, result);
+                    ListDifferenceOnObjects(f, s, result);
                 }
             }
 
@@ -120,7 +120,7 @@ namespace ClassComparator
                     var f = property.GetValue(first);
                     var s = property.GetValue(second);
 
-                    DifferenceOnObjects(f, s, result);
+                    ListDifferenceOnObjects(f, s, result);
                 }
 
             }
